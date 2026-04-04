@@ -3,171 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cooking-with-TORAYA | الفيديوهات المصلحة</title>
+    <title>Cooking-with-TORAYA | الموسوعة العالمية</title>
     <style>
-        /* --- التصميم الأصلي المعتمد --- */
+        /* --- المتغيرات والتصميم العام --- */
         :root {
             --primary: #e67e22;
             --secondary: #27ae60;
             --dark: #2c3e50;
-            --light: #f4f4f4;
+            --bg: #f4f7f6;
+            --white: #ffffff;
         }
 
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: var(--light); 
+            background-color: var(--bg); 
             margin: 0; 
             color: var(--dark);
         }
 
+        /* --- الهيدر (رأس الصفحة) --- */
         header { 
-            background: var(--dark); 
-            color: white; 
-            padding: 3rem 1rem; 
-            text-align: center; 
+            background: linear-gradient(135deg, var(--dark) 0%, #1a252f 100%);
+            color: var(--white); 
+            padding: 4rem 1rem; 
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
         }
 
-        .search-container { 
-            margin: -25px auto 20px; 
+        header h1 { margin: 0; font-size: 2.8rem; letter-spacing: 1px; }
+        header p { opacity: 0.8; font-size: 1.1rem; margin-top: 10px; }
+
+        /* --- شريط البحث --- */
+        .search-wrapper { 
+            max-width: 800px; 
+            margin: -35px auto 30px; 
+            display: flex; 
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 2px solid #eee;
+        }
+
+        #searchInput { 
+            flex: 1; 
+            padding: 20px 30px; 
+            border: none; 
+            outline: none; 
+            font-size: 1.1rem;
+        }
+
+        .search-btn { 
+            background: var(--primary); 
+            color: var(--white); 
+            border: none; 
+            padding: 0 40px; 
+            font-weight: bold; 
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .search-btn:hover { background: #d35400; }
+
+        /* --- الأقسام --- */
+        .tabs { 
             display: flex; 
             justify-content: center; 
-            max-width: 700px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border-radius: 50px;
-            overflow: hidden;
-            background: white;
+            gap: 15px; 
+            margin-bottom: 30px; 
+            flex-wrap: wrap; 
         }
 
-        input { padding: 15px 25px; width: 100%; border: none; outline: none; font-size: 1.1rem; }
-        .search-btn { padding: 15px 30px; background: var(--primary); border: none; color: white; cursor: pointer; font-weight: bold; }
+        .tab-btn { 
+            padding: 12px 25px; 
+            border-radius: 30px; 
+            border: 2px solid var(--primary); 
+            background: var(--white); 
+            color: var(--primary); 
+            font-weight: bold; 
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-        .categories { display: flex; justify-content: center; gap: 12px; margin: 20px; flex-wrap: wrap; }
-        .cat-btn { padding: 10px 22px; border-radius: 25px; border: 2px solid var(--primary); background: white; color: var(--primary); cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; }
+        .tab-btn.active, .tab-btn:hover { 
+            background: var(--primary); 
+            color: var(--white); 
+        }
 
-        .recipe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; padding: 20px; max-width: 1300px; margin: 0 auto; }
-        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: 0.3s; }
-        .card:hover { transform: translateY(-8px); }
+        /* --- شبكة الوصفات --- */
+        .recipe-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+            gap: 30px; 
+            padding: 20px; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
 
-        /* حاوية الفيديو المحسنة */
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .recipe-card { 
+            background: var(--white); 
+            border-radius: 25px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            border: 1px solid #eee;
+        }
 
-        .details { padding: 20px; }
-        .badge { background: var(--secondary); color: white; padding: 4px 10px; border-radius: 8px; font-size: 12px; display: inline-block; margin-bottom: 10px; }
-        .title { margin: 5px 0; font-size: 1.5rem; color: var(--dark); font-weight: bold; }
-        .timer { color: #7f8c8d; font-size: 14px; margin-bottom: 15px; display: block; }
-        .section-title { color: var(--primary); font-weight: bold; margin-top: 15px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        ul, ol { padding-right: 25px; font-size: 0.95rem; line-height: 1.6; color: #444; }
-        #noResults { text-align: center; padding: 50px; display: none; font-size: 1.2rem; color: #7f8c8d; }
+        .recipe-card:hover { transform: translateY(-10px); }
+
+        .video-box { 
+            position: relative; 
+            padding-bottom: 56.25%; 
+            height: 0; 
+            background: #000; 
+        }
+
+        .video-box iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+        }
+
+        .recipe-info { padding: 25px; }
+        .recipe-tag { 
+            background: #e8f5e9; 
+            color: var(--secondary); 
+            padding: 5px 15px; 
+            border-radius: 15px; 
+            font-size: 0.8rem; 
+            font-weight: bold;
+        }
+
+        .recipe-title { margin: 15px 0 10px; font-size: 1.6rem; color: var(--dark); }
+        .recipe-meta { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 20px; display: block; }
+
+        .sub-title { 
+            color: var(--primary); 
+            font-weight: bold; 
+            display: block; 
+            margin-top: 15px; 
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 5px;
+        }
+
+        ul, ol { padding-right: 20px; font-size: 0.95rem; line-height: 1.7; color: #555; }
+
+        #noResults { text-align: center; padding: 100px; display: none; font-size: 1.3rem; color: #95a5a6; }
+
+        @media (max-width: 768px) {
+            .recipe-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Cooking-with-TORAYA 🍳</h1>
-    <p>وصفات عالمية بدقة عالية وفيديوهات مفعلة</p>
+    <h1>Cooking-with-TORAYA</h1>
+    <p>بوابتك الذكية لوصفات الطبخ العالمية بجميع اللغات</p>
 </header>
 
-<div class="search-container">
-    <input type="text" id="recipeSearch" oninput="runSearch()" placeholder="ابحث مثلاً: كسكس، Pizza، Pancake، فطور...">
+<div class="search-wrapper">
+    <input type="text" id="searchInput" oninput="searchRecipes()" placeholder="ابحث عن: طاجين، Pasta، Breakfast، Dessert، غداء...">
     <button class="search-btn">بحث</button>
 </div>
 
-<nav class="categories">
-    <button class="cat-btn active" onclick="filterType('all', this)">الكل</button>
-    <button class="cat-btn" onclick="filterType('فطور', this)">فطور</button>
-    <button class="cat-btn" onclick="filterType('غداء', this)">غداء</button>
-    <button class="cat-btn" onclick="filterType('عشاء', this)">عشاء</button>
-    <button class="cat-btn" onclick="filterType('حلويات', this)">حلويات</button>
-</nav>
+<div class="tabs">
+    <button class="tab-btn active" onclick="filterData('all', this)">🌍 الكل</button>
+    <button class="tab-btn" onclick="filterData('فطور', this)">🍳 فطور</button>
+    <button class="tab-btn" onclick="filterData('غداء', this)">🥘 غداء</button>
+    <button class="tab-btn" onclick="filterData('عشاء', this)">🥗 عشاء</button>
+    <button class="tab-btn" onclick="filterData('حلويات', this)">🍰 حلويات</button>
+</div>
 
-<div id="noResults">🔎 عذراً، لم نجد هذه الوصفة.. جرب كلمة أخرى!</div>
+<div id="noResults">🔎 نعتذر، لا توجد وصفة بهذا الاسم حالياً..</div>
 
-<main id="recipeGrid" class="recipe-grid"></main>
+<main class="recipe-grid" id="recipeContainer"></main>
 
 <script>
-    // قاعدة بيانات محدثة بروابط "Embed" رسمية مفعلة للمواقع الخارجية
-    const recipes = [
+    // --- قاعدة بيانات الوصفات الشاملة (ترجمة + فيديوهات مفعلة) ---
+    const recipesData = [
         {
-            names: ["الكسكس المغربي", "Moroccan Couscous", "Couscous"],
-            searchTags: "كسكس غداء مغربي morocco lunch maghrib",
-            type: "غداء",
+            id: 1,
+            title: "الكسكس المغربي الملكي",
+            keywords: "كسكس غداء مغربي morocco couscous maghrib lunch",
+            category: "غداء",
             time: "120 دقيقة",
-            ingredients: ["1 كغ كسكس رفيع", "لحم غنم مميز", "خضار (جزر، قرع، لفت، حمص)", "سمن وتوابل مغربية"],
-            steps: ["تحضير المرق واللحم أولاً", "تبخير الكسكس على 3 مراحل بدقة", "إضافة الخضار حسب مدة نضجها", "التزيين في القصعة التقليدية"],
+            ingredients: ["1 كغ كسكس", "لحم غنم مميز", "7 خضار متنوعة", "حمص، سمن، وتوابل مغربية"],
+            method: ["طهي اللحم مع التوابل والبصل", "تبخير الكسكس 3 مرات متتالية", "إضافة الخضار للمرق حسب سرعة نضجها", "التقديم في قصعة تقليدية وتسقيته جيداً"],
             video: "https://www.youtube.com/embed/fD3G0j1F9wY"
         },
         {
-            names: ["بان كيك أمريكي", "Fluffy Pancakes", "Pancakes"],
-            searchTags: "بان كيك فطور حلويات breakfast sweet hly",
-            type: "فطور",
-            time: "15 دقيقة",
-            ingredients: ["كوب دقيق", "بيضتان وحليب", "ملعقة سكر وفانيليا", "خميرة الحلويات"],
-            steps: ["مزج العناصر السائلة ثم الجافة", "صب الخليط في مقلاة ساخنة", "الانتظار حتى ظهور الفقاعات ثم القلب", "التقديم مع العسل أو المربى"],
+            id: 2,
+            title: "بان كيك أمريكي هش",
+            keywords: "بان كيك فطور حلويات pancakes breakfast sweet petit déjeuner",
+            category: "فطور",
+            time: "20 دقيقة",
+            ingredients: ["2 كوب دقيق", "بيضتان + حليب", "فانيليا + بيكينج باودر", "عسل للتزيين"],
+            method: ["خلط المكونات السائلة ثم إضافة الدقيق", "تسخين مقلاة غير لاصقة وصب الخليط", "القلب فور ظهور فقاعات صغيرة", "التقديم مع العسل أو الفواكه"],
             video: "https://www.youtube.com/embed/N_p_96K9X8o"
         },
         {
-            names: ["باستا إيطالية", "Italian Pasta", "Pâtes"],
-            searchTags: "باستا غداء عشاء مكرونة pasta dinner lunch",
-            type: "عشاء",
-            time: "20 دقيقة",
-            ingredients: ["مكرونة من اختيارك", "صلصة طماطم مركزة", "ثوم، ريحان، وزيت زيتون", "جبنة موزاريلا"],
-            steps: ["سلق المكرونة وتصفيتها", "تحمير الثوم مع الصلصة والمنكهات", "خلط المكرونة مع الصلصة جيداً", "إضافة الجبن وتقديمها ساخنة"],
+            id: 3,
+            title: "بيتزا مارغريتا الإيطالية",
+            keywords: "بيتزا عشاء إيطالي pizza margherita dinner italian italien",
+            category: "عشاء",
+            time: "45 دقيقة",
+            ingredients: ["عجينة بيتزا طازجة", "صلصة طماطم بالريحان", "جبنة موزاريلا", "زيت زيتون بكر"],
+            method: ["فرد العجين في صينية الفرن", "توزيع الصلصة والجبن والريحان", "الخبز في فرن عالي الحرارة لـ 10 دقائق", "إضافة زيت الزيتون بعد الخروج مباشرة"],
             video: "https://www.youtube.com/embed/1-SJGQ2HLp8"
+        },
+        {
+            id: 4,
+            title: "طاجين الدجاج بالزيتون",
+            keywords: "طاجين دجاج غداء مغربي chicken tagine morocco poulet",
+            category: "غداء",
+            time: "70 دقيقة",
+            ingredients: ["دجاج بلدي أو رومي", "بصل مفروم وحامض مصير", "زيتون أخضر وتوابل", "ثوم وقزبر ومعدنوس"],
+            method: ["تتبيل الدجاج ووضعه في الطاجين مع البصل", "إضافة زيت الزيتون والطهي على نار هادئة", "إضافة الزيتون والحامض في المرحلة النهائية", "التركيز على تجمر المرق (الدغميرة)"],
+            video: "https://www.youtube.com/embed/L1m1e_y5kOQ"
+        },
+        {
+            id: 5,
+            title: "تيراميسو إيطالي فاخر",
+            keywords: "تيراميسو حلويات حلى tiramisu sweet dessert italian",
+            category: "حلويات",
+            time: "30 دقيقة",
+            ingredients: ["بسكويت ليدي فينجر", "جبن ماسكربون", "قهوة اسبريسو باردة", "كاكاو مر للزينة"],
+            method: ["خفق الجبن مع الكريمة والسكر", "تغميس البسكويت في القهوة سريعاً", "عمل طبقات متتالية من البسكويت والكريمة", "التبريد لـ 6 ساعات ثم رش الكاكاو"],
+            video: "https://www.youtube.com/embed/mUf_T-3o_6E"
         }
     ];
 
-    function renderRecipes(data) {
-        const grid = document.getElementById('recipeGrid');
-        const noResults = document.getElementById('noResults');
-        
+    const container = document.getElementById('recipeContainer');
+    const noResults = document.getElementById('noResults');
+
+    // وظيفة عرض البطاقات
+    function displayRecipes(data) {
         if (data.length === 0) {
-            grid.innerHTML = "";
+            container.innerHTML = "";
             noResults.style.display = "block";
-            return;
+        } else {
+            noResults.style.display = "none";
+            container.innerHTML = data.map(recipe => `
+                <article class="recipe-card">
+                    <div class="video-box">
+                        <iframe src="${recipe.video}" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="recipe-info">
+                        <span class="recipe-tag">${recipe.category}</span>
+                        <h2 class="recipe-title">${recipe.title}</h2>
+                        <span class="recipe-meta">🕒 الوقت: ${recipe.time}</span>
+                        
+                        <strong class="sub-title">المقادير:</strong>
+                        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+                        
+                        <strong class="sub-title">طريقة التحضير:</strong>
+                        <ol>${recipe.method.map(m => `<li>${m}</li>`).join('')}</ol>
+                    </div>
+                </article>
+            `).join('');
         }
-
-        noResults.style.display = "none";
-        grid.innerHTML = data.map(recipe => `
-            <div class="card">
-                <div class="video-container">
-                    <iframe 
-                        src="${recipe.video}" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="details">
-                    <span class="badge">${recipe.type}</span>
-                    <h2 class="title">${recipe.names[0]}</h2>
-                    <span class="timer">⏱️ وقت الطهي: ${recipe.time}</span>
-                    <span class="section-title">المقادير:</span>
-                    <ul>${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
-                    <span class="section-title">طريقة التحضير:</span>
-                    <ol>${recipe.steps.map(step => `<li>${step}</li>`).join('')}</ol>
-                </div>
-            </div>
-        `).join('');
     }
 
-    function runSearch() {
-        const term = document.getElementById('recipeSearch').value.toLowerCase().trim();
-        const filtered = recipes.filter(r => 
-            r.names.some(name => name.toLowerCase().includes(term)) || 
-            r.searchTags.includes(term)
+    // محرك البحث الذكي (متعدد اللغات)
+    function searchRecipes() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const filtered = recipesData.filter(r => 
+            r.title.toLowerCase().includes(query) || 
+            r.keywords.toLowerCase().includes(query)
         );
-        renderRecipes(filtered);
+        displayRecipes(filtered);
     }
 
-    function filterType(type, btn) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    // وظيفة الفلترة بالأقسام
+    function filterData(cat, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        if (type === 'all') renderRecipes(recipes);
-        else renderRecipes(recipes.filter(r => r.type === type));
+        
+        if (cat === 'all') {
+            displayRecipes(recipesData);
+        } else {
+            const filtered = recipesData.filter(r => r.category === cat);
+            displayRecipes(filtered);
+        }
     }
 
-    window.onload = () => renderRecipes(recipes);
+    // التشغيل الافتراضي
+    window.onload = () => displayRecipes(recipesData);
 </script>
+
 </body>
 </html>
