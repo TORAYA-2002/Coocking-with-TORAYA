@@ -3,236 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cooking-with-TORAYA | أشهى الوصفات المغربية والعالمية</title>
-    <meta name="description" content="اكتشفوا عالم الطبخ مع TORAYA. وصفات سهلة، سريعة، ومضمونة النجاح مع فيديوهات توضيحية.">
+    <title>Cooking with TORAYA | أشهى الوصفات العصرية</title>
+    
+    <meta name="description" content="موقع Cooking with TORAYA يقدم وصفات طبخ مغربية وعالمية سهلة التحضير مع فيديوهات توضيحية بجودة عالية.">
+    <meta name="keywords" content="طبخ، وصفات مغربية، حلويات، عشاء سريع، TORAYA 2002">
     
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    
+
     <style>
+        /* المتغيرات الأساسية (سهلة التعديل) */
         :root {
-            --primary-color: #e67e22; /* برتقالي فاتح للشهية */
-            --bg-color: #ffffff;
-            --text-color: #2c3e50;
-            --card-bg: #f9f9f9;
-            --transition: 0.3s;
+            --primary-color: #e67e22; /* برتقالي فاتح */
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --nav-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
         }
 
+        /* تنسيقات الوضع الليلي */
         [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #f1f1f1;
-            --card-bg: #2d2d2d;
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --nav-bg: #1e1e1e;
+            --shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
+            line-height: 1.6;
             transition: var(--transition);
         }
 
-        /* Header & Navigation */
+        /* الهيدر والملاحة */
         header {
-            background-color: var(--card-bg);
-            padding: 1rem 5%;
+            background-color: var(--nav-bg);
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.6rem;
+            font-weight: 700;
             color: var(--primary-color);
+            text-decoration: none;
         }
 
-        .nav-tools {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        #theme-toggle {
-            background: none;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 5px 15px;
+        .theme-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 25px;
             cursor: pointer;
-            border-radius: 20px;
             font-weight: bold;
+            font-family: 'Tajawal', sans-serif;
+            transition: var(--transition);
         }
 
-        /* Hero Section */
+        .theme-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        /* قسم الترحيب */
         .hero {
             text-align: center;
-            padding: 50px 5%;
-            background: linear-gradient(rgba(230, 126, 34, 0.1), rgba(230, 126, 34, 0.05));
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--primary-color), #d35400);
+            color: white;
+            margin-bottom: 40px;
         }
 
-        /* Main Content */
-        main {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 5%;
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        /* حاوية الوصفات */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .recipe-card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
+            background: var(--card-bg);
+            border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
         }
 
-        .video-wrapper {
+        /* مشغل الفيديو */
+        .video-container {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
+            width: 100%;
+            background: #000;
+            aspect-ratio: 16 / 9;
         }
 
-        .video-wrapper video {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .video-container video {
             width: 100%;
             height: 100%;
-            background: #000;
+            display: block;
         }
 
-        .recipe-content {
-            padding: 20px;
+        /* محتوى الوصفة */
+        .recipe-body {
+            padding: 30px;
         }
 
-        .recipe-meta {
-            display: flex;
-            gap: 20px;
-            font-size: 0.9rem;
+        .recipe-title {
             color: var(--primary-color);
+            font-size: 1.8rem;
             margin-bottom: 15px;
         }
 
-        .ingredients {
-            background: rgba(230, 126, 34, 0.05);
-            padding: 15px;
-            border-right: 4px solid var(--primary-color);
-            margin: 15px 0;
+        .recipe-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
-        /* Footer */
+        .ingredients-box {
+            background: rgba(230, 126, 34, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border-right: 5px solid var(--primary-color);
+            margin-bottom: 25px;
+        }
+
+        .ingredients-box h3 { margin-bottom: 10px; color: var(--primary-color); }
+        .ingredients-box ul { list-style: inside circle; }
+
+        .steps h3 { margin-bottom: 15px; }
+        .steps p { margin-bottom: 10px; }
+
+        /* التذييل */
         footer {
             text-align: center;
             padding: 40px;
-            background-color: var(--card-bg);
-            margin-top: 50px;
+            background: var(--card-bg);
+            margin-top: 60px;
+            border-top: 1px solid rgba(0,0,0,0.1);
         }
 
-        .footer-links {
-            margin-bottom: 20px;
-        }
-
-        .footer-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            margin: 0 10px;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
+        /* متجاوب مع الموبايل */
         @media (max-width: 600px) {
-            header { flex-direction: column; gap: 10px; }
+            .hero h1 { font-size: 1.8rem; }
+            .recipe-title { font-size: 1.4rem; }
+            header { padding: 10px 5%; }
         }
     </style>
 </head>
 <body data-theme="light">
 
     <header>
-        <div class="logo">TORAYA - 2002</div>
-        <div class="nav-tools">
-            <button id="theme-toggle">تغيير الوضع 🌙</button>
-        </div>
+        <a href="#" class="logo">TORAYA - 2002</a>
+        <button class="theme-btn" id="themeSwitcher">الوضع الليلي 🌙</button>
     </header>
 
     <section class="hero">
-        <h1>مرحباً بكم في Cooking with TORAYA</h1>
-        <p>وصفات منزلية مغربية بلمسة عصرية وتطبيقات برمجية ذكية.</p>
+        <h1>Cooking with TORAYA</h1>
+        <p>مطبخك الرقمي لوصفات سريعة، اقتصادية، ومصورة</p>
     </section>
 
-    <main>
+    <main class="container">
         <article class="recipe-card" itemscope itemtype="https://schema.org/Recipe">
-            <div class="video-wrapper">
-                <video controls poster="images/recipe-thumb.jpg">
-                    <source src="vids/pasta-recipe.mp4" type="video/mp4">
+            
+            <div class="video-container">
+                <video controls poster="images/poster1.jpg">
+                    <source src="vids/recipe1.mp4" type="video/mp4">
                     متصفحك لا يدعم تشغيل الفيديو.
                 </video>
             </div>
 
-            <div class="recipe-content">
-                <div class="recipe-meta">
-                    <span>⏱️ مدة التحضير: 20 دقيقة</span>
-                    <span>🥗 وجبة غداء</span>
+            <div class="recipe-body">
+                <div class="recipe-info">
+                    <span>🕒 15 دقيقة</span>
+                    <span>🔥 سهلة التحضير</span>
+                    <span>📍 وصفة مغربية</span>
                 </div>
-                
-                <h2 itemprop="name">باستا كريمية على طريقة طرايا</h2>
-                <p itemprop="description">وصفة سهلة وسريعة التحضير بمكونات بسيطة متوفرة في كل بيت مغربي.</p>
 
-                <div class="ingredients">
+                <h2 class="recipe-title" itemprop="name">طاجين السمك بالخضر على طريقة طرايا</h2>
+                <p itemprop="description">طريقة تحضير طاجين مغربي أصيل غني بالنكهات ومرتب بطريقة عصرية تناسب مائدتكم.</p>
+
+                <div class="ingredients-box">
                     <h3>المقادير:</h3>
                     <ul itemprop="recipeIngredient">
-                        <li>250 جرام معكرونة</li>
-                        <li>كوب كريمة طبخ</li>
-                        <li>فص ثوم مهروس</li>
-                        <li>زيت زيتون وملح وفلفل</li>
+                        <li>500 جرام سمك طري</li>
+                        <li>خضروات مشكلة (جزر، بطاطس، فلفل)</li>
+                        <li>شرمولة مغربية (قزبر، ثوم، توابل)</li>
+                        <li>زيت زيتون وليمون حامض</li>
                     </ul>
                 </div>
 
-                <h3>طريقة التحضير:</h3>
-                <div itemprop="recipeInstructions">
-                    <p>1. نقوم بسلق المعكرونة في ماء مملح.</p>
-                    <p>2. في مقلاة، نضع زيت الزيتون والثوم ثم نضيف الكريمة.</p>
-                    <p>3. نمزج المعكرونة مع الصلصة ونقدمها ساخنة.</p>
+                <div class="steps">
+                    <h3>طريقة التحضير:</h3>
+                    <div itemprop="recipeInstructions">
+                        <p>1. نخلط السمك مع الشرمولة ونتركه يتشرب النكهة.</p>
+                        <p>2. نرتب الخضروات في الطاجين ونضع فوقها السمك.</p>
+                        <p>3. نضيف القليل من الماء ونتركه ينضج على نار هادئة.</p>
+                    </div>
                 </div>
             </div>
         </article>
     </main>
 
     <footer>
-        <div class="footer-links">
-            <a href="#">من نحن</a> | 
-            <a href="#">اتصل بنا</a> | 
-            <a href="#">سياسة الخصوصية</a>
-        </div>
-        <p>© 2026 Cooking-with-TORAYA. جميع الحقوق محفوظة.</p>
+        <p>جميع الحقوق محفوظة لـ <strong>Cooking with TORAYA</strong> &copy; 2026</p>
+        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">صنع بكل حب في المغرب 🇲🇦</p>
     </footer>
 
     <script>
-        // برمجة وضع الليل (Dark Mode)
-        const themeToggle = document.getElementById('theme-toggle');
+        const themeSwitcher = document.getElementById('themeSwitcher');
         const body = document.body;
 
-        themeToggle.addEventListener('click', () => {
-            if (body.getAttribute('data-theme') === 'light') {
-                body.setAttribute('data-theme', 'dark');
-                themeToggle.textContent = 'الوضع النهاري ☀️';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-                themeToggle.textContent = 'الوضع الليلي 🌙';
-                localStorage.setItem('theme', 'light');
-            }
+        // التحقق من تفضيلات المستخدم السابقة
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+        updateButtonText(currentTheme);
+
+        themeSwitcher.addEventListener('click', () => {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateButtonText(newTheme);
         });
 
-        // حفظ تفضيلات المستخدم عند العودة للموقع
-        window.onload = () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                body.setAttribute('data-theme', savedTheme);
-                themeToggle.textContent = savedTheme === 'dark' ? 'الوضع النهاري ☀️' : 'الوضع الليلي 🌙';
-            }
-        };
+        function updateButtonText(theme) {
+            themeSwitcher.textContent = theme === 'dark' ? 'الوضع النهاري ☀️' : 'الوضع الليلي 🌙';
+        }
     </script>
 </body>
 </html>
