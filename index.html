@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cooking-with-TORAYA | الفيديوهات المفعلة</title>
+    <title>Cooking-with-TORAYA | الفيديوهات المصلحة</title>
     <style>
         /* --- التصميم الأصلي المعتمد --- */
         :root {
             --primary: #e67e22;
             --secondary: #27ae60;
             --dark: #2c3e50;
-            --light: #ecf0f1;
+            --light: #f4f4f4;
         }
 
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #f9f9f9; 
+            background: var(--light); 
             margin: 0; 
             color: var(--dark);
         }
@@ -35,6 +35,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             border-radius: 50px;
             overflow: hidden;
+            background: white;
         }
 
         input { padding: 15px 25px; width: 100%; border: none; outline: none; font-size: 1.1rem; }
@@ -48,16 +49,16 @@
         .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: 0.3s; }
         .card:hover { transform: translateY(-8px); }
 
-        /* حاوية الفيديو لضمان التشغيل */
+        /* حاوية الفيديو المحسنة */
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
         .details { padding: 20px; }
         .badge { background: var(--secondary); color: white; padding: 4px 10px; border-radius: 8px; font-size: 12px; display: inline-block; margin-bottom: 10px; }
-        .title { margin: 5px 0; font-size: 1.5rem; color: var(--dark); }
-        .timer { color: #7f8c8d; font-size: 14px; margin-bottom: 15px; }
+        .title { margin: 5px 0; font-size: 1.5rem; color: var(--dark); font-weight: bold; }
+        .timer { color: #7f8c8d; font-size: 14px; margin-bottom: 15px; display: block; }
         .section-title { color: var(--primary); font-weight: bold; margin-top: 15px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        ul, ol { padding-right: 20px; font-size: 0.95rem; line-height: 1.6; color: #444; }
+        ul, ol { padding-right: 25px; font-size: 0.95rem; line-height: 1.6; color: #444; }
         #noResults { text-align: center; padding: 50px; display: none; font-size: 1.2rem; color: #7f8c8d; }
     </style>
 </head>
@@ -65,11 +66,11 @@
 
 <header>
     <h1>Cooking-with-TORAYA 🍳</h1>
-    <p>جميع الفيديوهات مفعلة وجاهزة للمشاهدة الآن</p>
+    <p>وصفات عالمية بدقة عالية وفيديوهات مفعلة</p>
 </header>
 
 <div class="search-container">
-    <input type="text" id="recipeSearch" oninput="runSearch()" placeholder="ابحث بكل اللغات: Pasta, فطور, Tajine, Lunch...">
+    <input type="text" id="recipeSearch" oninput="runSearch()" placeholder="ابحث مثلاً: كسكس، Pizza، Pancake، فطور...">
     <button class="search-btn">بحث</button>
 </div>
 
@@ -81,57 +82,39 @@
     <button class="cat-btn" onclick="filterType('حلويات', this)">حلويات</button>
 </nav>
 
-<div id="noResults">🔎 لم نجد وصفة بهذا الاسم.. جرب لغة أخرى!</div>
+<div id="noResults">🔎 عذراً، لم نجد هذه الوصفة.. جرب كلمة أخرى!</div>
 
 <main id="recipeGrid" class="recipe-grid"></main>
 
 <script>
-    // قاعدة بيانات محدثة بروابط فيديو "Embed" مفعلة 100%
+    // قاعدة بيانات محدثة بروابط "Embed" رسمية مفعلة للمواقع الخارجية
     const recipes = [
         {
-            names: ["الكسكس المغربي", "Moroccan Couscous", "Couscous Marocain"],
+            names: ["الكسكس المغربي", "Moroccan Couscous", "Couscous"],
             searchTags: "كسكس غداء مغربي morocco lunch maghrib",
             type: "غداء",
             time: "120 دقيقة",
-            ingredients: ["1 كغ كسكس رفيع", "لحم غنم أو دجاج", "7 خضار (جزر، لفت، قرع..)", "سمن مغربي وتوابل"],
-            steps: ["تحضير المرق مع اللحم والتوابل", "تبخير الكسكس 3 مرات", "إضافة الخضار للمرق تدريجياً", "تقديم الكسكس وتسقيته بالمرق الساخن"],
+            ingredients: ["1 كغ كسكس رفيع", "لحم غنم مميز", "خضار (جزر، قرع، لفت، حمص)", "سمن وتوابل مغربية"],
+            steps: ["تحضير المرق واللحم أولاً", "تبخير الكسكس على 3 مراحل بدقة", "إضافة الخضار حسب مدة نضجها", "التزيين في القصعة التقليدية"],
             video: "https://www.youtube.com/embed/fD3G0j1F9wY"
         },
         {
-            names: ["بان كيك هش", "Fluffy Pancakes", "Pancakes Moelleux"],
-            searchTags: "بان كيك فطور حلويات breakfast sweet petit déjeuner",
+            names: ["بان كيك أمريكي", "Fluffy Pancakes", "Pancakes"],
+            searchTags: "بان كيك فطور حلويات breakfast sweet hly",
             type: "فطور",
             time: "15 دقيقة",
-            ingredients: ["كوب دقيق", "بيضة واحدة", "كوب حليب", "فانيليا وبكينج باودر"],
-            steps: ["خلط السوائل ثم إضافة الدقيق", "صب الخليط في مقلاة ساخنة", "القلب فور ظهور الفقاعات", "التقديم مع العسل أو الشوكولاتة"],
+            ingredients: ["كوب دقيق", "بيضتان وحليب", "ملعقة سكر وفانيليا", "خميرة الحلويات"],
+            steps: ["مزج العناصر السائلة ثم الجافة", "صب الخليط في مقلاة ساخنة", "الانتظار حتى ظهور الفقاعات ثم القلب", "التقديم مع العسل أو المربى"],
             video: "https://www.youtube.com/embed/N_p_96K9X8o"
         },
         {
-            names: ["باستا إيطالية بالصلصة", "Italian Pasta", "Pâtes Italiennes"],
-            searchTags: "باستا غداء عشاء مكرونة pasta dinner lunch italien",
+            names: ["باستا إيطالية", "Italian Pasta", "Pâtes"],
+            searchTags: "باستا غداء عشاء مكرونة pasta dinner lunch",
             type: "عشاء",
-            time: "25 دقيقة",
-            ingredients: ["400غ مكرونة", "صلصة طماطم طازجة", "ثوم، ريحان، زيت زيتون", "جبن بارميزان"],
-            steps: ["سلق المكرونة في ماء مملح", "تحضير الصلصة مع الثوم والريحان", "خلط المكرونة بالصلصة", "إضافة الجبن وتقدم ساخنة"],
+            time: "20 دقيقة",
+            ingredients: ["مكرونة من اختيارك", "صلصة طماطم مركزة", "ثوم، ريحان، وزيت زيتون", "جبنة موزاريلا"],
+            steps: ["سلق المكرونة وتصفيتها", "تحمير الثوم مع الصلصة والمنكهات", "خلط المكرونة مع الصلصة جيداً", "إضافة الجبن وتقديمها ساخنة"],
             video: "https://www.youtube.com/embed/1-SJGQ2HLp8"
-        },
-        {
-            names: ["طاجين الدجاج بالزيتون", "Chicken Tagine", "Tajine de Poulet"],
-            searchTags: "طاجين دجاج غداء مغربي chicken tagine morocco lunch",
-            type: "غداء",
-            time: "60 دقيقة",
-            ingredients: ["دجاجة مقطعة", "بصل مفروم وثوم", "زيتون أخضر وحامض مصير", "زعفران وزنجبيل"],
-            steps: ["تتبيل الدجاج وزيت الزيتون", "طهي البصل والدجاج في الطاجين", "إضافة الزيتون والحامض قبل النضج", "تركه يتجمر حتى يقل المرق"],
-            video: "https://www.youtube.com/embed/L1m1e_y5kOQ"
-        },
-        {
-            names: ["تيراميسو", "Tiramisu", "Tiramisù"],
-            searchTags: "تيراميسو حلويات حلى ايطالي dessert sweet italian",
-            type: "حلويات",
-            time: "30 دقيقة",
-            ingredients: ["بسكويت ليدي فينجر", "جبن ماسكربون", "قهوة اسبريسو باردة", "بودرة كاكاو"],
-            steps: ["خفق الجبن مع الكريمة والسكر", "غمس البسكويت في القهوة", "عمل طبقات من البسكويت والكريمة", "التبريد ورش الكاكاو"],
-            video: "https://www.youtube.com/embed/mUf_T-3o_6E"
         }
     ];
 
@@ -149,13 +132,17 @@
         grid.innerHTML = data.map(recipe => `
             <div class="card">
                 <div class="video-container">
-                    <iframe src="${recipe.video}" title="وصفة ${recipe.names[0]}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    <iframe 
+                        src="${recipe.video}" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
                 </div>
                 <div class="details">
                     <span class="badge">${recipe.type}</span>
                     <h2 class="title">${recipe.names[0]}</h2>
-                    <p class="timer">⏱️ مدة الطهي: ${recipe.time}</p>
-                    <span class="section-title">المكونات:</span>
+                    <span class="timer">⏱️ وقت الطهي: ${recipe.time}</span>
+                    <span class="section-title">المقادير:</span>
                     <ul>${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
                     <span class="section-title">طريقة التحضير:</span>
                     <ol>${recipe.steps.map(step => `<li>${step}</li>`).join('')}</ol>
