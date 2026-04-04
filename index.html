@@ -1,22 +1,238 @@
-<article itemscope itemtype="https://schema.org/Recipe">
-  <h2 itemprop="name">عنوان الوصفة - Cooking with TORAYA</h2>
-  
-  <div class="video-container">
-    <video controls poster="image-placeholder.jpg">
-      <source src="vids/recipe1.mp4" type="video/mp4">
-    </video>
-  </div>
-
-  <div class="recipe-details">
-    <h3>المكونات (Ingredients):</h3>
-    <ul itemprop="recipeIngredient">
-      <li>2 كؤوس دقيق</li>
-      <li>ملعقة زيت زيتون</li>
-    </ul>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking-with-TORAYA | أشهى الوصفات المغربية والعالمية</title>
+    <meta name="description" content="اكتشفوا عالم الطبخ مع TORAYA. وصفات سهلة، سريعة، ومضمونة النجاح مع فيديوهات توضيحية.">
     
-    <h3>طريقة التحضير (Instructions):</h3>
-    <div itemprop="recipeInstructions">
-      <p>1. قم بخلط المكونات...</p>
-    </div>
-  </div>
-</article>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #e67e22; /* برتقالي فاتح للشهية */
+            --bg-color: #ffffff;
+            --text-color: #2c3e50;
+            --card-bg: #f9f9f9;
+            --transition: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f1f1f1;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            transition: var(--transition);
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--card-bg);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-tools {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        #theme-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 50px 5%;
+            background: linear-gradient(rgba(230, 126, 34, 0.1), rgba(230, 126, 34, 0.05));
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 5%;
+        }
+
+        .recipe-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        .recipe-content {
+            padding: 20px;
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .ingredients {
+            background: rgba(230, 126, 34, 0.05);
+            padding: 15px;
+            border-right: 4px solid var(--primary-color);
+            margin: 15px 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            background-color: var(--card-bg);
+            margin-top: 50px;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <header>
+        <div class="logo">TORAYA - 2002</div>
+        <div class="nav-tools">
+            <button id="theme-toggle">تغيير الوضع 🌙</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>مرحباً بكم في Cooking with TORAYA</h1>
+        <p>وصفات منزلية مغربية بلمسة عصرية وتطبيقات برمجية ذكية.</p>
+    </section>
+
+    <main>
+        <article class="recipe-card" itemscope itemtype="https://schema.org/Recipe">
+            <div class="video-wrapper">
+                <video controls poster="images/recipe-thumb.jpg">
+                    <source src="vids/pasta-recipe.mp4" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                </video>
+            </div>
+
+            <div class="recipe-content">
+                <div class="recipe-meta">
+                    <span>⏱️ مدة التحضير: 20 دقيقة</span>
+                    <span>🥗 وجبة غداء</span>
+                </div>
+                
+                <h2 itemprop="name">باستا كريمية على طريقة طرايا</h2>
+                <p itemprop="description">وصفة سهلة وسريعة التحضير بمكونات بسيطة متوفرة في كل بيت مغربي.</p>
+
+                <div class="ingredients">
+                    <h3>المقادير:</h3>
+                    <ul itemprop="recipeIngredient">
+                        <li>250 جرام معكرونة</li>
+                        <li>كوب كريمة طبخ</li>
+                        <li>فص ثوم مهروس</li>
+                        <li>زيت زيتون وملح وفلفل</li>
+                    </ul>
+                </div>
+
+                <h3>طريقة التحضير:</h3>
+                <div itemprop="recipeInstructions">
+                    <p>1. نقوم بسلق المعكرونة في ماء مملح.</p>
+                    <p>2. في مقلاة، نضع زيت الزيتون والثوم ثم نضيف الكريمة.</p>
+                    <p>3. نمزج المعكرونة مع الصلصة ونقدمها ساخنة.</p>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">من نحن</a> | 
+            <a href="#">اتصل بنا</a> | 
+            <a href="#">سياسة الخصوصية</a>
+        </div>
+        <p>© 2026 Cooking-with-TORAYA. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        // برمجة وضع الليل (Dark Mode)
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = 'الوضع النهاري ☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = 'الوضع الليلي 🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // حفظ تفضيلات المستخدم عند العودة للموقع
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.setAttribute('data-theme', savedTheme);
+                themeToggle.textContent = savedTheme === 'dark' ? 'الوضع النهاري ☀️' : 'الوضع الليلي 🌙';
+            }
+        };
+    </script>
+</body>
+</html>
