@@ -1,67 +1,81 @@
-<script>
-// ===============================
-// 1) توليد ID ثابت لكل وصفة
-// ===============================
-function generateRecipeId(existingRecipes) {
-  const count = existingRecipes ? Object.keys(existingRecipes).length : 0;
-  return "recipe_" + (count + 1);
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yomyard – Recettes & Saveurs</title>
 
-// ===============================
-// 2) حفظ وصفة جديدة مع ID ثابت
-// ===============================
-function saveNewRecipe(recipeData) {
-  const recipesRef = ref(db, "recipes");
+  <!-- Styles principaux -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Barre de navigation -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <div class="logo">Yomyard</div>
+      <nav class="main-nav">
+        <a href="#accueil">Accueil</a>
+        <a href="#recettes">Recettes</a>
+        <a href="#apropos">À propos</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-  onValue(recipesRef, (snapshot) => {
-    const data = snapshot.val();
-    const newId = generateRecipeId(data);
+  <!-- Section Hero -->
+  <main id="accueil">
+    <section class="hero">
+      <div class="container hero-content">
+        <div>
+          <h1>Bienvenue sur Yomyard</h1>
+          <p>
+            Découvrez des recettes simples, modernes et adaptées à votre quotidien.
+          </p>
+          <a href="#recettes" class="btn-primary">Voir les recettes</a>
+        </div>
+      </div>
+    </section>
 
-    set(ref(db, "recipes/" + newId), recipeData);
-  }, { onlyOnce: true });
-}
+    <!-- Section Recettes -->
+    <section id="recettes" class="section">
+      <div class="container">
+        <h2>Recettes populaires</h2>
+        <div id="recipes-grid" class="cards-grid">
+          <!-- Les cartes recettes seront injectées ici par JavaScript -->
+        </div>
+      </div>
+    </section>
 
-// ===============================
-// 3) عرض الوصفات مع رقم N1 – N2 – N3
-// ===============================
-function renderRecipesWithNumbers(data) {
-  const container = document.querySelector(".recipes-container");
-  if (!container) return;
+    <!-- Section À propos -->
+    <section id="apropos" class="section section-alt">
+      <div class="container">
+        <h2>À propos de Yomyard</h2>
+        <p>
+          Yomyard est une plateforme dédiée aux passionnés de cuisine qui veulent
+          des recettes claires, rapides et fiables.
+        </p>
+      </div>
+    </section>
 
-  container.innerHTML = "";
+    <!-- Section Contact -->
+    <section id="contact" class="section">
+      <div class="container">
+        <h2>Contact</h2>
+        <p>
+          Une idée, une suggestion ou une collaboration ? Écrivez-nous :
+          <a href="mailto:contact@yomyard.com">contact@yomyard.com</a>
+        </p>
+      </div>
+    </section>
+  </main>
 
-  Object.keys(data).forEach((id, index) => {
-    const recipe = data[id];
-    const number = index + 1;
+  <!-- Pied de page -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> Yomyard. Tous droits réservés.</p>
+    </div>
+  </footer>
 
-    const card = document.createElement("div");
-    card.className = "recipe-card";
-
-    card.innerHTML = `
-      <div class="recipe-number">N${number}</div>
-      <h3>${recipe.title || "بدون عنوان"}</h3>
-      <p>${recipe.description || ""}</p>
-      <p><strong>الوقت:</strong> ${recipe.time || ""}</p>
-      <p><strong>الحصص:</strong> ${recipe.servings || ""}</p>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-// ===============================
-// 4) حذف الفيديوهات نهائياً
-// ===============================
-document.querySelectorAll(".videos-section, .videos, #videos").forEach(el => el.remove());
-
-// ===============================
-// 5) تشغيل النظام الجديد فوق الأصلي
-// ===============================
-const recipesRef = ref(db, "recipes");
-onValue(recipesRef, (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    renderRecipesWithNumbers(data);
-  }
-});
-</script>
+  <script src="app.js"></script>
+</body>
+</html>
