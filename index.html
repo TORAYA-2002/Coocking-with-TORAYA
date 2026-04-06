@@ -5,7 +5,7 @@
   <title>YUM YARD - وصفات و مقالات احترافية</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Alae" />
-  <meta name="description" content="YUM YARD - وصفات، مقالات، فيديوهات، وسياسة خصوصية وشروط استخدام بتصميم احترافي." />
+  <meta name="description" content="YUM YARD - وصفات، مقالات، فيديوهات، سياسة خصوصية وشروط استخدام بتصميم احترافي." />
   <style>
     * {
       box-sizing: border-box;
@@ -39,8 +39,12 @@
       color: #f7c948;
       letter-spacing: 1px;
     }
+    .pro-header nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
     .pro-header nav a {
-      margin-left: 20px;
       text-decoration: none;
       color: #f5f5f5;
       font-weight: 500;
@@ -468,7 +472,6 @@
         font-size: 24px;
       }
       .pro-header nav a {
-        margin-left: 10px;
         font-size: 12px;
       }
     }
@@ -490,7 +493,7 @@
 
   <section class="hero" id="home">
     <h1>YUM YARD — عالم الوصفات و المقالات الذهبية</h1>
-    <p>وصفات، مقالات، فيديوهات، وسياسة خصوصية وشروط استخدام في مساحة احترافية واحدة.</p>
+    <p>وصفات، مقالات، فيديوهات، سياسة خصوصية وشروط استخدام في مساحة احترافية واحدة.</p>
   </section>
 
   <div class="banner" id="bannerText">
@@ -564,7 +567,7 @@
     <div class="modal">
       <div class="modal-header">
         <h2 id="modalTitle">عنوان الوصفة</h2>
-        <button class="close-btn" onclick="closeRecipeModal()">×</button>
+        <button class="close-btn" id="closeRecipeBtn">×</button>
       </div>
       <img id="modalImage" src="" alt="">
       <h3>المكونات</h3>
@@ -578,7 +581,7 @@
     <div class="modal">
       <div class="modal-header">
         <h2 id="articleModalTitle">عنوان المقال</h2>
-        <button class="close-btn" onclick="closeArticleModal()">×</button>
+        <button class="close-btn" id="closeArticleBtn">×</button>
       </div>
       <p id="articleModalBody"></p>
     </div>
@@ -723,11 +726,11 @@
       <div class="admin-section" id="tab-legal">
         <div class="admin-form">
           <div>
-            <label>نص سياسة الخصوصية</label>
+            <label>نص سياسة الخصوصية (HTML)</label>
             <textarea id="privacyText"></textarea>
           </div>
           <div>
-            <label>نص الشروط والأحكام</label>
+            <label>نص الشروط والأحكام (HTML)</label>
             <textarea id="termsText"></textarea>
           </div>
         </div>
@@ -777,6 +780,7 @@
     let recipesCache = [];
     let articlesCache = [];
     let videosCache = [];
+    let isAdmin = false;
 
     const recipesContainer = document.getElementById("recipesContainer");
     const articlesContainer = document.getElementById("articlesContainer");
@@ -787,10 +791,12 @@
     const modalImage = document.getElementById("modalImage");
     const modalIngredients = document.getElementById("modalIngredients");
     const modalSteps = document.getElementById("modalSteps");
+    const closeRecipeBtn = document.getElementById("closeRecipeBtn");
 
     const articleModalBackdrop = document.getElementById("articleModalBackdrop");
     const articleModalTitle = document.getElementById("articleModalTitle");
     const articleModalBody = document.getElementById("articleModalBody");
+    const closeArticleBtn = document.getElementById("closeArticleBtn");
 
     function renderRecipes(filterCat = "all") {
       recipesContainer.innerHTML = "";
@@ -863,9 +869,9 @@
       recipeModalBackdrop.style.display = "flex";
     }
 
-    window.closeRecipeModal = function () {
+    function closeRecipeModal() {
       recipeModalBackdrop.style.display = "none";
-    };
+    }
 
     function openArticle(id) {
       const article = articlesCache.find(a => a.id === id);
@@ -875,19 +881,18 @@
       articleModalBackdrop.style.display = "flex";
     }
 
-    window.closeArticleModal = function () {
+    function closeArticleModal() {
       articleModalBackdrop.style.display = "none";
-    };
+    }
+
+    closeRecipeBtn.addEventListener("click", closeRecipeModal);
+    closeArticleBtn.addEventListener("click", closeArticleModal);
 
     recipeModalBackdrop.addEventListener("click", e => {
-      if (e.target === recipeModalBackdrop) {
-        window.closeRecipeModal();
-      }
+      if (e.target === recipeModalBackdrop) closeRecipeModal();
     });
     articleModalBackdrop.addEventListener("click", e => {
-      if (e.target === articleModalBackdrop) {
-        window.closeArticleModal();
-      }
+      if (e.target === articleModalBackdrop) closeArticleModal();
     });
 
     document.querySelectorAll("#recipeFilters .filter-btn").forEach(btn => {
@@ -993,7 +998,6 @@
     const adminLoginBtn = document.getElementById("adminLoginBtn");
     const adminPanel = document.getElementById("adminPanel");
     const adminCloseBtn = document.getElementById("adminCloseBtn");
-    let isAdmin = false;
 
     adminLoginBtn.addEventListener("click", () => {
       if (!isAdmin) {
@@ -1024,9 +1028,7 @@
         document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const tab = btn.getAttribute("data-tab");
-        document.querySelectorAll(".admin-section").forEach(sec => {
-          sec.classList.remove("active");
-        });
+        document.querySelectorAll(".admin-section").forEach(sec => sec.classList.remove("active"));
         document.getElementById(tab).classList.add("active");
       });
     });
@@ -1089,7 +1091,7 @@
 
     saveRecipeBtn.addEventListener("click", async () => {
       if (!isAdmin) return;
-      const id = recipeIdInput.value.trim() || crypto.randomUUID();
+      const id = recipeIdInput.value.trim() || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
       const data = {
         title: recipeTitleInput.value || "",
         image: recipeImageInput.value || "",
@@ -1156,7 +1158,7 @@
 
     saveArticleBtn.addEventListener("click", async () => {
       if (!isAdmin) return;
-      const id = articleIdInput.value.trim() || crypto.randomUUID();
+      const id = articleIdInput.value.trim() || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
       const data = {
         title: articleTitleInput.value || "",
         excerpt: articleExcerptInput.value || "",
@@ -1222,7 +1224,7 @@
 
     saveVideoBtn.addEventListener("click", async () => {
       if (!isAdmin) return;
-      const id = videoIdInput.value.trim() || crypto.randomUUID();
+      const id = videoIdInput.value.trim() || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
       const data = {
         title: videoTitleInput.value || "",
         thumb: videoThumbInput.value || "",
