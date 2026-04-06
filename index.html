@@ -1041,7 +1041,10 @@
         return;
       }
       const text = document.getElementById("adminBannerText").value || "";
-      await setDoc(doc(settingsCol, "banner"), { text });
+      await setDoc(doc(settingsCol, "banner"), {
+        text,
+        adminCode: "20132021"
+      });
       document.getElementById("bannerText").textContent = text;
       alert("✔ تم حفظ البانر.");
     } catch (err) {
@@ -1097,7 +1100,7 @@
     recipeStepsInput.value = "";
   });
 
-  // FIXED SAVE RECIPE BUTTON
+  // SAVE RECIPE
   saveRecipeBtn.addEventListener("click", async () => {
     try {
       if (!isAdmin) {
@@ -1121,7 +1124,8 @@
           .split("\n")
           .map(i => i.trim())
           .filter(i => i),
-        steps: recipeStepsInput.value.trim()
+        steps: recipeStepsInput.value.trim(),
+        adminCode: "20132021"
       };
 
       if (!data.title || !data.image || !data.steps) {
@@ -1209,7 +1213,8 @@
       const data = {
         title: articleTitleInput.value.trim(),
         excerpt: articleExcerptInput.value.trim(),
-        body: articleBodyInput.value.trim()
+        body: articleBodyInput.value.trim(),
+        adminCode: "20132021"
       };
       if (!data.title || !data.body) {
         alert("يجب ملء العنوان ونص المقال.");
@@ -1299,7 +1304,8 @@
         title: videoTitleInput.value.trim(),
         thumb: videoThumbInput.value.trim(),
         url: videoUrlInput.value.trim(),
-        desc: videoDescInput.value.trim()
+        desc: videoDescInput.value.trim(),
+        adminCode: "20132021"
       };
       if (!data.title || !data.url) {
         alert("يجب ملء العنوان ورابط الفيديو.");
@@ -1345,8 +1351,14 @@
       }
       const privacyHtml = document.getElementById("privacyText").value || "";
       const termsHtml = document.getElementById("termsText").value || "";
-      await setDoc(doc(settingsCol, "privacy"), { html: privacyHtml });
-      await setDoc(doc(settingsCol, "terms"), { html: termsHtml });
+      await setDoc(doc(settingsCol, "privacy"), {
+        html: privacyHtml,
+        adminCode: "20132021"
+      });
+      await setDoc(doc(settingsCol, "terms"), {
+        html: termsHtml,
+        adminCode: "20132021"
+      });
       document.getElementById("privacyContent").innerHTML = privacyHtml;
       document.getElementById("termsContent").innerHTML = termsHtml;
       alert("✔ تم حفظ النصوص القانونية.");
@@ -1366,6 +1378,7 @@
     ]);
   })();
 </script>
+
 
 </body>
 </html>
