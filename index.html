@@ -2,211 +2,866 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Cooking Studio – Admin</title>
+  <title>Cooking Studio – Recipes & Articles</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --card: rgba(15, 23, 42, 0.96);
+      --border: rgba(148, 163, 184, 0.4);
+      --border-soft: rgba(55, 65, 81, 0.9);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --accent: #f59e0b;
+      --accent2: #f97316;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #020617;
-      color: #f9fafb;
+      background:
+        radial-gradient(circle at top, #1f2937 0, #020617 55%),
+        radial-gradient(circle at bottom, #0b1120 0, #020617 60%);
+      color: var(--text);
+      min-height: 100vh;
     }
-    .shell { max-width: 900px; margin: 32px auto; padding: 0 16px 40px; }
-    h1 { margin: 0 0 4px; }
-    .muted { color: #9ca3af; font-size: 0.9rem; }
-    .card {
-      margin-top: 16px;
-      background: #020617;
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 800px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 40px;
+      height: 40px;
       border-radius: 14px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      padding: 16px;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
-    }
-    .row { margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; }
-    input, textarea {
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
-      color: #f9fafb;
-      padding: 6px 8px;
-      font-size: 0.85rem;
-      outline: none;
-    }
-    textarea { min-height: 70px; resize: vertical; }
-    button {
-      border-radius: 999px;
-      border: none;
-      padding: 7px 14px;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: linear-gradient(90deg, #f59e0b, #f97316);
+      background: radial-gradient(circle at 30% 0, #facc15, #f97316 40%, #0f172a 100%);
+      box-shadow: 0 0 25px rgba(248, 250, 252, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
       color: #111827;
     }
-    .btn-ghost {
-      background: rgba(15, 23, 42, 0.9);
-      color: #9ca3af;
-      border: 1px solid rgba(148, 163, 184, 0.5);
+    h1 {
+      margin: 0;
+      font-size: 1.7rem;
+      letter-spacing: 0.03em;
     }
-    .status { font-size: 0.8rem; margin-top: 6px; }
-    .status.error { color: #ef4444; }
-    .status.success { color: #22c55e; }
-    .list { margin-top: 10px; max-height: 260px; overflow: auto; display: flex; flex-direction: column; gap: 8px; }
-    .item {
-      border-radius: 10px;
+    .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+    }
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #22c55e, #16a34a);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+    }
+    .admin-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    }
+    .admin-btn span {
+      font-size: 0.9rem;
+    }
+    .admin-btn:hover {
+      background: rgba(15, 23, 42, 1);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 18px;
+    }
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .hero-card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), #020617);
+      padding: 16px 16px 18px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, rgba(248, 250, 252, 0.06), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(251, 191, 36, 0.08), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+    .hero-title {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+    .hero-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 420px;
+    }
+    .hero-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 600px) {
+      .hero-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .hero-stat {
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 8px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hero-stat-label {
+      color: var(--muted);
+    }
+    .hero-stat-value {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .tabs {
+      margin-top: 4px;
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 3px;
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 8px;
+      gap: 4px;
+    }
+    .tab-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 12px;
       font-size: 0.8rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    }
+    .tab-btn.active {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #111827;
+      transform: translateY(-1px);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+      gap: 18px;
+    }
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .card {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 14px 14px 16px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .card-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+    .item {
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 9px 9px 9px;
+      font-size: 0.82rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 18px rgba(15, 23, 42, 0.9);
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 1);
+    }
+    .item-main {
+      min-width: 0;
+    }
+    .item-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-desc {
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #facc15, #f97316);
+    }
+
+    .static-section h3 {
+      margin: 10px 0 4px;
+      font-size: 0.9rem;
+    }
+    .static-section p,
+    .static-section li {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .static-section ul {
+      margin: 0 0 0 16px;
+      padding: 0;
+    }
+
+    .status {
+      font-size: 0.78rem;
+      margin-top: 6px;
+      color: var(--muted);
+    }
+    .status.error {
+      color: var(--danger);
+    }
+    .status.success {
+      color: var(--success);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+    .modal {
+      max-width: 520px;
+      width: 100%;
+      margin: 0 16px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+      padding: 16px 16px 14px;
+      position: relative;
+      animation: pop 0.18s ease-out;
+    }
+    @keyframes pop {
+      from { transform: translateY(8px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .modal-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      padding-right: 20px;
+    }
+    .modal-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .modal-body {
+      font-size: 0.82rem;
+      color: var(--text);
+      max-height: 320px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+    .modal-body p {
+      margin: 0 0 8px;
+    }
+    .modal-body a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .modal-body a:hover {
+      text-decoration: underline;
+    }
+
+    .admin-panel {
+      margin-top: 16px;
+      border-radius: 16px;
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 12px 12px 14px;
+      display: none;
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .admin-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .admin-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 700px) {
+      .admin-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 0.78rem;
+    }
+    .field label {
+      color: var(--muted);
+    }
+    input,
+    textarea,
+    select {
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text);
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.4);
+      background: rgba(15, 23, 42, 1);
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    button {
+      font-family: inherit;
+    }
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #111827;
+      box-shadow: 0 10px 25px rgba(248, 250, 252, 0.15);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(248, 250, 252, 0.18);
+    }
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 1);
+    }
+    .btn-danger {
+      background: rgba(127, 29, 29, 0.95);
+      color: #fee2e2;
+    }
+    .btn-danger:hover {
+      background: rgba(185, 28, 28, 1);
+    }
+    .admin-list {
+      margin-top: 8px;
+      max-height: 220px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 2px;
+      font-size: 0.78rem;
+    }
+    .admin-item {
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 7px 8px;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 6px;
     }
-    .item-title { font-weight: 600; }
-    .item-meta { color: #9ca3af; font-size: 0.75rem; }
-    .item-actions { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; justify-content: center; }
+    .admin-item-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .admin-item-desc {
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .admin-item-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
     .btn-icon {
       border: none;
       background: transparent;
-      color: #9ca3af;
+      color: var(--muted);
       cursor: pointer;
       font-size: 0.8rem;
+      padding: 0;
     }
-    .btn-icon.danger { color: #ef4444; }
+    .btn-icon.danger {
+      color: var(--danger);
+    }
+
+    .admin-lock {
+      display: none;
+      margin-top: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 10px 10px 11px;
+      font-size: 0.8rem;
+    }
+    .admin-lock-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .admin-lock input {
+      max-width: 180px;
+    }
   </style>
 </head>
 <body>
   <div class="shell">
-    <h1>Cooking Studio – Admin</h1>
-    <div class="muted">This page is for you only. Do not share this URL.</div>
+    <header>
+      <div class="brand">
+        <div class="brand-logo">CS</div>
+        <div>
+          <h1>Cooking Studio</h1>
+          <div class="muted">Clean, live recipes & articles powered by Firebase.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Visitor mode – read only</span>
+        </div>
+        <button id="open-admin-lock" class="admin-btn" type="button">
+          <span>Admin panel</span>
+          <span>🔒</span>
+        </button>
+      </div>
+    </header>
 
-    <div class="card" id="auth-card">
-      <div class="row">
-        <label for="admin-code">Admin code</label>
-        <input
-          type="password"
-          id="admin-code"
-          placeholder="Enter admin code"
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-        />
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div class="hero-title">Cook, publish, and update in real time.</div>
+          <div class="hero-sub">
+            Visitors can explore recipes and articles. When you unlock admin mode with your code, you can create, edit, and delete content — all changes instantly appear to everyone.
+          </div>
+          <div class="hero-grid" style="margin-top:14px;">
+            <div class="hero-stat">
+              <div class="hero-stat-label">Recipes</div>
+              <div class="hero-stat-value" id="stat-recipes">0 live</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-label">Articles</div>
+              <div class="hero-stat-value" id="stat-articles">0 live</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-label">Privacy & Terms</div>
+              <div class="hero-stat-value">Editable in admin</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <button class="btn-primary" id="admin-login-btn">Unlock admin</button>
-      <div class="status" id="auth-status"></div>
-    </div>
+      <div class="hero-card">
+        <div class="hero-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <div>
+              <div class="hero-title">Browse by category</div>
+              <div class="hero-sub">Switch between recipes, articles, privacy policy, and terms & conditions.</div>
+            </div>
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="recipes" type="button">Recipes</button>
+              <button class="tab-btn" data-tab="articles" type="button">Articles</button>
+              <button class="tab-btn" data-tab="privacy" type="button">Privacy</button>
+              <button class="tab-btn" data-tab="terms" type="button">Terms</button>
+            </div>
+          </div>
+          <div class="muted" style="margin-top:10px;font-size:0.8rem;">
+            Click any item to open a clean reader view. Admin edits update this content live for all visitors.
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <div class="card" id="admin-card" style="display:none;">
-      <h2>Recipes</h2>
-      <div class="row">
-        <label>Title</label>
-        <input id="r-title" />
+    <section class="layout">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="list-title">Recipes</div>
+            <div class="card-sub" id="list-sub">All public recipes, sorted by latest.</div>
+          </div>
+        </div>
+        <div id="recipes-list" class="list"></div>
+        <div id="articles-list" class="list" style="display:none;"></div>
+        <div id="privacy-view" class="list" style="display:none;"></div>
+        <div id="terms-view" class="list" style="display:none;"></div>
+        <div id="empty-state" class="muted" style="margin-top:8px;font-size:0.8rem;display:none;">
+          Nothing here yet. When the admin adds content, it will appear instantly.
+        </div>
       </div>
-      <div class="row">
-        <label>Description</label>
-        <input id="r-desc" />
-      </div>
-      <div class="row">
-        <label>Content</label>
-        <textarea id="r-content"></textarea>
-      </div>
-      <div class="row">
-        <label>Image URL</label>
-        <input id="r-image" />
-      </div>
-      <div class="row">
-        <label>Video URL</label>
-        <input id="r-video" />
-      </div>
-      <button class="btn-primary" id="r-save">Save recipe</button>
-      <button class="btn-ghost" id="r-reset">Reset</button>
-      <div class="status" id="r-status"></div>
-      <div class="list" id="r-list"></div>
-    </div>
 
-    <div class="card" id="admin-articles-card" style="display:none;">
-      <h2>Articles</h2>
-      <div class="row">
-        <label>Title</label>
-        <input id="a-title" />
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">About this site</div>
+            <div class="card-sub">Realtime cooking content with a hidden admin mode.</div>
+          </div>
+        </div>
+        <div class="static-section">
+          <h3>Privacy policy</h3>
+          <p>
+            This demo uses Firebase Realtime Database. Visitors can only read public content. Admin actions are protected by a private code and never exposed in the page.
+          </p>
+          <h3>Terms & conditions</h3>
+          <ul>
+            <li>You control all content stored in your Firebase project.</li>
+            <li>Recipes and articles are for educational and personal use.</li>
+            <li>Do not share your admin code with anyone.</li>
+          </ul>
+          <h3>Categories</h3>
+          <ul>
+            <li><strong>Recipes:</strong> Full cooking instructions, images, and videos.</li>
+            <li><strong>Articles:</strong> Tips, guides, and cooking stories.</li>
+            <li><strong>Privacy policy:</strong> How data is handled.</li>
+            <li><strong>Conditions & terms:</strong> Rules for using the site.</li>
+          </ul>
+        </div>
+
+        <div id="admin-lock" class="admin-lock">
+          <div><strong>Admin access is locked.</strong> Enter the admin code to continue.</div>
+          <div class="admin-lock-row">
+            <input
+              type="password"
+              id="admin-code-input"
+              placeholder="Admin code"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+            <button class="btn btn-primary" id="admin-code-btn" type="button">Unlock</button>
+          </div>
+          <div class="status" id="admin-code-status"></div>
+        </div>
+
+        <div id="admin-panel" class="admin-panel">
+          <div class="admin-header">
+            <div>
+              <div class="admin-title">Admin mode</div>
+              <div class="muted" style="font-size:0.78rem;">You can create, edit, and delete content. Changes are live for all visitors.</div>
+            </div>
+            <button class="btn btn-ghost" id="admin-logout" type="button">Exit admin</button>
+          </div>
+
+          <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">
+            Choose what you want to manage.
+          </div>
+          <div class="tabs" style="margin-bottom:10px;">
+            <button class="tab-btn active" data-admin-tab="recipes" type="button">Recipes</button>
+            <button class="tab-btn" data-admin-tab="articles" type="button">Articles</button>
+            <button class="tab-btn" data-admin-tab="pages" type="button">Privacy & Terms</button>
+          </div>
+
+          <div id="admin-recipes">
+            <div class="admin-row">
+              <div class="field">
+                <label for="r-title">Recipe title</label>
+                <input id="r-title" />
+              </div>
+              <div class="field">
+                <label for="r-desc">Short description</label>
+                <input id="r-desc" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="r-content">Full recipe (steps, ingredients)</label>
+              <textarea id="r-content"></textarea>
+            </div>
+            <div class="admin-row" style="margin-top:6px;">
+              <div class="field">
+                <label for="r-image">Image URL (optional)</label>
+                <input id="r-image" />
+              </div>
+              <div class="field">
+                <label for="r-video">Video URL (optional)</label>
+                <input id="r-video" />
+              </div>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn-primary" id="r-save" type="button">Save recipe</button>
+              <button class="btn btn-ghost" id="r-reset" type="button">Reset form</button>
+            </div>
+            <div class="status" id="r-status"></div>
+            <div class="admin-list" id="r-list"></div>
+          </div>
+
+          <div id="admin-articles" style="display:none;">
+            <div class="admin-row">
+              <div class="field">
+                <label for="a-title">Article title</label>
+                <input id="a-title" />
+              </div>
+              <div class="field">
+                <label for="a-desc">Short description</label>
+                <input id="a-desc" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="a-content">Full article</label>
+              <textarea id="a-content"></textarea>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn-primary" id="a-save" type="button">Save article</button>
+              <button class="btn btn-ghost" id="a-reset" type="button">Reset form</button>
+            </div>
+            <div class="status" id="a-status"></div>
+            <div class="admin-list" id="a-list"></div>
+          </div>
+
+          <div id="admin-pages" style="display:none;">
+            <div class="field">
+              <label for="p-privacy">Privacy policy content</label>
+              <textarea id="p-privacy"></textarea>
+            </div>
+            <div class="field" style="margin-top:6px;">
+              <label for="p-terms">Terms & conditions content</label>
+              <textarea id="p-terms"></textarea>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn-primary" id="p-save" type="button">Save pages</button>
+            </div>
+            <div class="status" id="p-status"></div>
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <label>Description</label>
-        <input id="a-desc" />
-      </div>
-      <div class="row">
-        <label>Content</label>
-        <textarea id="a-content"></textarea>
-      </div>
-      <button class="btn-primary" id="a-save">Save article</button>
-      <button class="btn-ghost" id="a-reset">Reset</button>
-      <div class="status" id="a-status"></div>
-      <div class="list" id="a-list"></div>
+    </section>
+  </div>
+
+  <div id="modal-backdrop" class="modal-backdrop">
+    <div class="modal">
+      <button class="modal-close" id="modal-close" type="button">✕</button>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-sub" id="modal-sub"></div>
+      <div class="modal-body" id="modal-body"></div>
     </div>
   </div>
 
-  <script>
-    const API_BASE = "/api";
-    let adminCode = null;
-    let recipes = [];
-    let articles = [];
-    let editingRecipeId = null;
-    let editingArticleId = null;
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      push,
+      set,
+      update,
+      remove,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const authCard = document.getElementById("auth-card");
-    const adminCard = document.getElementById("admin-card");
-    const adminArticlesCard = document.getElementById("admin-articles-card");
-    const adminCodeInput = document.getElementById("admin-code");
-    const adminLoginBtn = document.getElementById("admin-login-btn");
-    const authStatus = document.getElementById("auth-status");
+    const firebaseConfig = {
+      apiKey: "AIzaSyC5vWkaVRMC5ZIT_KGeTqXMqg7U662n9bQ",
+      authDomain: "coocking-380d8.firebaseapp.com",
+      databaseURL: "https://coocking-380d8-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "coocking-380d8",
+      storageBucket: "coocking-380d8.firebasestorage.app",
+      messagingSenderId: "32948618858",
+      appId: "1:32948618858:web:43fd8bf52b3c9aee772c13",
+      measurementId: "G-MTD0PZSB0P"
+    };
 
-    function escapeHtml(str) {
-      return String(str || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-    adminLoginBtn.addEventListener("click", async () => {
-      const value = adminCodeInput.value.trim();
-      authStatus.classList.remove("error", "success");
-      if (!value) {
-        authStatus.textContent = "Enter the admin code.";
-        authStatus.classList.add("error");
-        return;
-      }
-      authStatus.textContent = "Checking...";
-      try {
-        const res = await fetch(`${API_BASE}/auth/admin`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-admin-code": value
-          },
-          body: JSON.stringify({})
-        });
-        if (!res.ok) {
-          authStatus.textContent = "Wrong code.";
-          authStatus.classList.add("error");
-          return;
-        }
-        adminCode = value;
-        authCard.style.display = "none";
-        adminCard.style.display = "block";
-        adminArticlesCard.style.display = "block";
-        authStatus.textContent = "";
-        await Promise.all([loadRecipes(), loadArticles()]);
-      } catch {
-        authStatus.textContent = "Error contacting server.";
-        authStatus.classList.add("error");
-      }
-    });
+    const ADMIN_CODE = "20132021";
 
-    // recipes admin
+    const recipesListEl = document.getElementById("recipes-list");
+    const articlesListEl = document.getElementById("articles-list");
+    const privacyViewEl = document.getElementById("privacy-view");
+    const termsViewEl = document.getElementById("terms-view");
+    const emptyStateEl = document.getElementById("empty-state");
+    const listTitleEl = document.getElementById("list-title");
+    const listSubEl = document.getElementById("list-sub");
+    const statRecipesEl = document.getElementById("stat-recipes");
+    const statArticlesEl = document.getElementById("stat-articles");
+
+    const modalBackdrop = document.getElementById("modal-backdrop");
+    const modalClose = document.getElementById("modal-close");
+    const modalTitle = document.getElementById("modal-title");
+    const modalSub = document.getElementById("modal-sub");
+    const modalBody = document.getElementById("modal-body");
+
+    const openAdminLockBtn = document.getElementById("open-admin-lock");
+    const adminLockEl = document.getElementById("admin-lock");
+    const adminCodeInputEl = document.getElementById("admin-code-input");
+    const adminCodeBtnEl = document.getElementById("admin-code-btn");
+    const adminCodeStatusEl = document.getElementById("admin-code-status");
+    const adminPanelEl = document.getElementById("admin-panel");
+    const adminLogoutBtn = document.getElementById("admin-logout");
+
+    const adminTabs = document.querySelectorAll("[data-admin-tab]");
+    const adminRecipesSection = document.getElementById("admin-recipes");
+    const adminArticlesSection = document.getElementById("admin-articles");
+    const adminPagesSection = document.getElementById("admin-pages");
+
     const rTitle = document.getElementById("r-title");
     const rDesc = document.getElementById("r-desc");
     const rContent = document.getElementById("r-content");
@@ -217,107 +872,6 @@
     const rStatus = document.getElementById("r-status");
     const rList = document.getElementById("r-list");
 
-    function resetRecipeForm() {
-      editingRecipeId = null;
-      rTitle.value = "";
-      rDesc.value = "";
-      rContent.value = "";
-      rImage.value = "";
-      rVideo.value = "";
-      rStatus.textContent = "";
-      rStatus.classList.remove("error", "success");
-      rSave.textContent = "Save recipe";
-    }
-
-    rReset.addEventListener("click", resetRecipeForm);
-
-    rSave.addEventListener("click", async () => {
-      if (!adminCode) return;
-      const title = rTitle.value.trim();
-      const description = rDesc.value.trim();
-      const content = rContent.value.trim();
-      const imageUrl = rImage.value.trim();
-      const videoUrl = rVideo.value.trim();
-      if (!title) {
-        rStatus.textContent = "Title required.";
-        rStatus.classList.add("error");
-        return;
-      }
-      rStatus.textContent = "Saving...";
-      rStatus.classList.remove("error", "success");
-      try {
-        const method = editingRecipeId ? "PUT" : "POST";
-        const url = editingRecipeId
-          ? `${API_BASE}/recipes/${encodeURIComponent(editingRecipeId)}`
-          : `${API_BASE}/recipes`;
-        const res = await fetch(url, {
-          method,
-          headers: {
-            "Content-Type": "application/json",
-            "x-admin-code": adminCode
-          },
-          body: JSON.stringify({ title, description, content, imageUrl, videoUrl })
-        });
-        if (!res.ok) throw new Error("Failed");
-        rStatus.textContent = editingRecipeId ? "Updated." : "Created.";
-        rStatus.classList.add("success");
-        resetRecipeForm();
-        await loadRecipes();
-      } catch {
-        rStatus.textContent = "Error saving.";
-        rStatus.classList.add("error");
-      }
-    });
-
-    function renderAdminRecipes() {
-      rList.innerHTML = "";
-      if (!recipes.length) {
-        const el = document.createElement("div");
-        el.className = "muted";
-        el.textContent = "No recipes yet.";
-        rList.appendChild(el);
-        return;
-      }
-      recipes.forEach((r) => {
-        const el = document.createElement("div");
-        el.className = "item";
-        el.innerHTML = `
-          <div>
-            <div class="item-title">${escapeHtml(r.title || "Untitled")}</div>
-            <div class="item-meta">${escapeHtml(r.description || "No description")}</div>
-          </div>
-          <div class="item-actions">
-            <button class="btn-icon" data-action="edit">✏️</button>
-            <button class="btn-icon danger" data-action="delete">🗑️</button>
-          </div>
-        `;
-        el.querySelector('[data-action="edit"]').addEventListener("click", () => {
-          editingRecipeId = r.id;
-          rTitle.value = r.title || "";
-          rDesc.value = r.description || "";
-          rContent.value = r.content || "";
-          rImage.value = r.imageUrl || "";
-          rVideo.value = r.videoUrl || "";
-          rSave.textContent = "Update recipe";
-        });
-        el.querySelector('[data-action="delete"]').addEventListener("click", async () => {
-          if (!confirm("Delete this recipe?")) return;
-          try {
-            const res = await fetch(`${API_BASE}/recipes/${encodeURIComponent(r.id)}`, {
-              method: "DELETE",
-              headers: { "x-admin-code": adminCode }
-            });
-            if (!res.ok) throw new Error("Failed");
-            await loadRecipes();
-          } catch {
-            alert("Error deleting recipe.");
-          }
-        });
-        rList.appendChild(el);
-      });
-    }
-
-    // articles admin
     const aTitle = document.getElementById("a-title");
     const aDesc = document.getElementById("a-desc");
     const aContent = document.getElementById("a-content");
@@ -326,111 +880,508 @@
     const aStatus = document.getElementById("a-status");
     const aList = document.getElementById("a-list");
 
-    function resetArticleForm() {
-      editingArticleId = null;
-      aTitle.value = "";
-      aDesc.value = "";
-      aContent.value = "";
-      aStatus.textContent = "";
-      aStatus.classList.remove("error", "success");
-      aSave.textContent = "Save article";
+    const pPrivacy = document.getElementById("p-privacy");
+    const pTerms = document.getElementById("p-terms");
+    const pSave = document.getElementById("p-save");
+    const pStatus = document.getElementById("p-status");
+
+    const tabs = document.querySelectorAll("[data-tab]");
+
+    let recipes = [];
+    let articles = [];
+    let pages = { privacy: "", terms: "" };
+    let currentTab = "recipes";
+    let isAdmin = false;
+    let editingRecipeId = null;
+    let editingArticleId = null;
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
-    aReset.addEventListener("click", resetArticleForm);
+    function setStatus(el, msg, type) {
+      el.textContent = msg || "";
+      el.classList.remove("error", "success");
+      if (type === "error") el.classList.add("error");
+      if (type === "success") el.classList.add("success");
+    }
 
-    aSave.addEventListener("click", async () => {
-      if (!adminCode) return;
-      const title = aTitle.value.trim();
-      const description = aDesc.value.trim();
-      const content = aContent.value.trim();
-      if (!title) {
-        aStatus.textContent = "Title required.";
-        aStatus.classList.add("error");
+    function openModal(title, sub, html) {
+      modalTitle.textContent = title || "";
+      modalSub.textContent = sub || "";
+      modalBody.innerHTML = html || "";
+      modalBackdrop.style.display = "flex";
+    }
+
+    function closeModal() {
+      modalBackdrop.style.display = "none";
+    }
+
+    modalClose.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    function renderStats() {
+      statRecipesEl.textContent = recipes.length + " live";
+      statArticlesEl.textContent = articles.length + " live";
+    }
+
+    function renderRecipesList() {
+      recipesListEl.innerHTML = "";
+      if (!recipes.length) {
+        emptyStateEl.style.display = "block";
         return;
       }
-      aStatus.textContent = "Saving...";
-      aStatus.classList.remove("error", "success");
-      try {
-        const method = editingArticleId ? "PUT" : "POST";
-        const url = editingArticleId
-          ? `${API_BASE}/articles/${encodeURIComponent(editingArticleId)}`
-          : `${API_BASE}/articles`;
-        const res = await fetch(url, {
-          method,
-          headers: {
-            "Content-Type": "application/json",
-            "x-admin-code": adminCode
-          },
-          body: JSON.stringify({ title, description, content })
+      emptyStateEl.style.display = "none";
+      recipes
+        .slice()
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+        .forEach((r) => {
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div class="item-main">
+              <div class="item-title">${escapeHtml(r.title || "Untitled recipe")}</div>
+              <div class="item-desc">${escapeHtml(r.description || "No description")}</div>
+            </div>
+            <div class="item-meta">
+              <span class="badge"><span class="dot"></span>Recipe</span>
+              ${r.imageUrl || r.videoUrl ? '<span>Media attached</span>' : ""}
+            </div>
+          `;
+          el.addEventListener("click", () => {
+            let html = "";
+            if (r.imageUrl) {
+              html += `<p><strong>Image:</strong> <a href="${escapeHtml(r.imageUrl)}" target="_blank" rel="noopener">Open image</a></p>`;
+            }
+            if (r.videoUrl) {
+              html += `<p><strong>Video:</strong> <a href="${escapeHtml(r.videoUrl)}" target="_blank" rel="noopener">Open video</a></p>`;
+            }
+            if (r.content) {
+              html += `<p>${escapeHtml(r.content).replace(/\n/g, "<br>")}</p>`;
+            }
+            if (!html) {
+              html = "<p>No content yet.</p>";
+            }
+            openModal(r.title || "Recipe", r.description || "", html);
+          });
+          recipesListEl.appendChild(el);
         });
-        if (!res.ok) throw new Error("Failed");
-        aStatus.textContent = editingArticleId ? "Updated." : "Created.";
-        aStatus.classList.add("success");
-        resetArticleForm();
-        await loadArticles();
-      } catch {
-        aStatus.textContent = "Error saving.";
-        aStatus.classList.add("error");
+    }
+
+    function renderArticlesList() {
+      articlesListEl.innerHTML = "";
+      if (!articles.length) {
+        emptyStateEl.style.display = "block";
+        return;
       }
+      emptyStateEl.style.display = "none";
+      articles
+        .slice()
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+        .forEach((a) => {
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div class="item-main">
+              <div class="item-title">${escapeHtml(a.title || "Untitled article")}</div>
+              <div class="item-desc">${escapeHtml(a.description || "No description")}</div>
+            </div>
+            <div class="item-meta">
+              <span class="badge"><span class="dot"></span>Article</span>
+            </div>
+          `;
+          el.addEventListener("click", () => {
+            let html = "";
+            if (a.content) {
+              html += `<p>${escapeHtml(a.content).replace(/\n/g, "<br>")}</p>`;
+            } else {
+              html = "<p>No content yet.</p>";
+            }
+            openModal(a.title || "Article", a.description || "", html);
+          });
+          articlesListEl.appendChild(el);
+        });
+    }
+
+    function renderPagesView() {
+      privacyViewEl.innerHTML = "";
+      termsViewEl.innerHTML = "";
+      const privacyText = pages.privacy || "No privacy policy has been written yet.";
+      const termsText = pages.terms || "No terms & conditions have been written yet.";
+
+      const pEl = document.createElement("div");
+      pEl.className = "item";
+      pEl.innerHTML = `
+        <div class="item-main">
+          <div class="item-title">Privacy policy</div>
+          <div class="item-desc">Click to read the full privacy policy.</div>
+        </div>
+        <div class="item-meta">
+          <span class="badge"><span class="dot"></span>Privacy</span>
+        </div>
+      `;
+      pEl.addEventListener("click", () => {
+        const html = `<p>${escapeHtml(privacyText).replace(/\n/g, "<br>")}</p>`;
+        openModal("Privacy policy", "", html);
+      });
+      privacyViewEl.appendChild(pEl);
+
+      const tEl = document.createElement("div");
+      tEl.className = "item";
+      tEl.innerHTML = `
+        <div class="item-main">
+          <div class="item-title">Terms & conditions</div>
+          <div class="item-desc">Click to read the full terms & conditions.</div>
+        </div>
+        <div class="item-meta">
+          <span class="badge"><span class="dot"></span>Terms</span>
+        </div>
+      `;
+      tEl.addEventListener("click", () => {
+        const html = `<p>${escapeHtml(termsText).replace(/\n/g, "<br>")}</p>`;
+        openModal("Terms & conditions", "", html);
+      });
+      termsViewEl.appendChild(tEl);
+    }
+
+    function updateMainView() {
+      recipesListEl.style.display = "none";
+      articlesListEl.style.display = "none";
+      privacyViewEl.style.display = "none";
+      termsViewEl.style.display = "none";
+      emptyStateEl.style.display = "none";
+
+      if (currentTab === "recipes") {
+        listTitleEl.textContent = "Recipes";
+        listSubEl.textContent = "All public recipes, sorted by latest.";
+        recipesListEl.style.display = "flex";
+        if (!recipes.length) emptyStateEl.style.display = "block";
+      } else if (currentTab === "articles") {
+        listTitleEl.textContent = "Articles";
+        listSubEl.textContent = "Cooking articles, tips, and guides.";
+        articlesListEl.style.display = "flex";
+        if (!articles.length) emptyStateEl.style.display = "block";
+      } else if (currentTab === "privacy") {
+        listTitleEl.textContent = "Privacy policy";
+        listSubEl.textContent = "How data is handled on this site.";
+        privacyViewEl.style.display = "flex";
+      } else if (currentTab === "terms") {
+        listTitleEl.textContent = "Terms & conditions";
+        listSubEl.textContent = "Rules for using this site.";
+        termsViewEl.style.display = "flex";
+      }
+    }
+
+    tabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tab = btn.getAttribute("data-tab");
+        currentTab = tab;
+        tabs.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        updateMainView();
+      });
     });
+
+    function renderAdminRecipes() {
+      rList.innerHTML = "";
+      if (!recipes.length) {
+        const el = document.createElement("div");
+        el.className = "muted";
+        el.style.fontSize = "0.78rem";
+        el.textContent = "No recipes yet.";
+        rList.appendChild(el);
+        return;
+      }
+      recipes
+        .slice()
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+        .forEach((r) => {
+          const el = document.createElement("div");
+          el.className = "admin-item";
+          el.innerHTML = `
+            <div>
+              <div class="admin-item-title">${escapeHtml(r.title || "Untitled recipe")}</div>
+              <div class="admin-item-desc">${escapeHtml(r.description || "No description")}</div>
+            </div>
+            <div class="admin-item-actions">
+              <button class="btn-icon" data-action="edit">✏️ Edit</button>
+              <button class="btn-icon danger" data-action="delete">🗑️ Delete</button>
+            </div>
+          `;
+          el.querySelector('[data-action="edit"]').addEventListener("click", () => {
+            editingRecipeId = r.id;
+            rTitle.value = r.title || "";
+            rDesc.value = r.description || "";
+            rContent.value = r.content || "";
+            rImage.value = r.imageUrl || "";
+            rVideo.value = r.videoUrl || "";
+            rSave.textContent = "Update recipe";
+            setStatus(rStatus, "", null);
+          });
+          el.querySelector('[data-action="delete"]').addEventListener("click", async () => {
+            if (!confirm("Delete this recipe?")) return;
+            try {
+              await remove(ref(db, "recipes/" + r.id));
+            } catch (e) {
+              alert("Error deleting recipe.");
+            }
+          });
+          rList.appendChild(el);
+        });
+    }
 
     function renderAdminArticles() {
       aList.innerHTML = "";
       if (!articles.length) {
         const el = document.createElement("div");
         el.className = "muted";
+        el.style.fontSize = "0.78rem";
         el.textContent = "No articles yet.";
         aList.appendChild(el);
         return;
       }
-      articles.forEach((a) => {
-        const el = document.createElement("div");
-        el.className = "item";
-        el.innerHTML = `
-          <div>
-            <div class="item-title">${escapeHtml(a.title || "Untitled")}</div>
-            <div class="item-meta">${escapeHtml(a.description || "No description")}</div>
-          </div>
-          <div class="item-actions">
-            <button class="btn-icon" data-action="edit">✏️</button>
-            <button class="btn-icon danger" data-action="delete">🗑️</button>
-          </div>
-        `;
-        el.querySelector('[data-action="edit"]').addEventListener("click", () => {
-          editingArticleId = a.id;
-          aTitle.value = a.title || "";
-          aDesc.value = a.description || "";
-          aContent.value = a.content || "";
-          aSave.textContent = "Update article";
+      articles
+        .slice()
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+        .forEach((a) => {
+          const el = document.createElement("div");
+          el.className = "admin-item";
+          el.innerHTML = `
+            <div>
+              <div class="admin-item-title">${escapeHtml(a.title || "Untitled article")}</div>
+              <div class="admin-item-desc">${escapeHtml(a.description || "No description")}</div>
+            </div>
+            <div class="admin-item-actions">
+              <button class="btn-icon" data-action="edit">✏️ Edit</button>
+              <button class="btn-icon danger" data-action="delete">🗑️ Delete</button>
+            </div>
+          `;
+          el.querySelector('[data-action="edit"]').addEventListener("click", () => {
+            editingArticleId = a.id;
+            aTitle.value = a.title || "";
+            aDesc.value = a.description || "";
+            aContent.value = a.content || "";
+            aSave.textContent = "Update article";
+            setStatus(aStatus, "", null);
+          });
+          el.querySelector('[data-action="delete"]').addEventListener("click", async () => {
+            if (!confirm("Delete this article?")) return;
+            try {
+              await remove(ref(db, "articles/" + a.id));
+            } catch (e) {
+              alert("Error deleting article.");
+            }
+          });
+          aList.appendChild(el);
         });
-        el.querySelector('[data-action="delete"]').addEventListener("click", async () => {
-          if (!confirm("Delete this article?")) return;
-          try {
-            const res = await fetch(`${API_BASE}/articles/${encodeURIComponent(a.id)}`, {
-              method: "DELETE",
-              headers: { "x-admin-code": adminCode }
-            });
-            if (!res.ok) throw new Error("Failed");
-            await loadArticles();
-          } catch {
-            alert("Error deleting article.");
-          }
-        });
-        aList.appendChild(el);
+    }
+
+    function resetRecipeForm() {
+      editingRecipeId = null;
+      rTitle.value = "";
+      rDesc.value = "";
+      rContent.value = "";
+      rImage.value = "";
+      rVideo.value = "";
+      rSave.textContent = "Save recipe";
+      setStatus(rStatus, "", null);
+    }
+
+    function resetArticleForm() {
+      editingArticleId = null;
+      aTitle.value = "";
+      aDesc.value = "";
+      aContent.value = "";
+      aSave.textContent = "Save article";
+      setStatus(aStatus, "", null);
+    }
+
+    rReset.addEventListener("click", resetRecipeForm);
+    aReset.addEventListener("click", resetArticleForm);
+
+    rSave.addEventListener("click", async () => {
+      if (!isAdmin) return;
+      const title = rTitle.value.trim();
+      const description = rDesc.value.trim();
+      const content = rContent.value.trim();
+      const imageUrl = rImage.value.trim();
+      const videoUrl = rVideo.value.trim();
+      if (!title) {
+        setStatus(rStatus, "Title is required.", "error");
+        return;
+      }
+      setStatus(rStatus, "Saving...", null);
+      try {
+        if (editingRecipeId) {
+          await update(ref(db, "recipes/" + editingRecipeId), {
+            title,
+            description,
+            content,
+            imageUrl,
+            videoUrl
+          });
+          setStatus(rStatus, "Recipe updated.", "success");
+        } else {
+          const newRef = push(ref(db, "recipes"));
+          await set(newRef, {
+            title,
+            description,
+            content,
+            imageUrl,
+            videoUrl,
+            createdAt: Date.now()
+          });
+          setStatus(rStatus, "Recipe created.", "success");
+        }
+        resetRecipeForm();
+      } catch (e) {
+        setStatus(rStatus, "Error saving recipe.", "error");
+      }
+    });
+
+    aSave.addEventListener("click", async () => {
+      if (!isAdmin) return;
+      const title = aTitle.value.trim();
+      const description = aDesc.value.trim();
+      const content = aContent.value.trim();
+      if (!title) {
+        setStatus(aStatus, "Title is required.", "error");
+        return;
+      }
+      setStatus(aStatus, "Saving...", null);
+      try {
+        if (editingArticleId) {
+          await update(ref(db, "articles/" + editingArticleId), {
+            title,
+            description,
+            content
+          });
+          setStatus(aStatus, "Article updated.", "success");
+        } else {
+          const newRef = push(ref(db, "articles"));
+          await set(newRef, {
+            title,
+            description,
+            content,
+            createdAt: Date.now()
+          });
+          setStatus(aStatus, "Article created.", "success");
+        }
+        resetArticleForm();
+      } catch (e) {
+        setStatus(aStatus, "Error saving article.", "error");
+      }
+    });
+
+    pSave.addEventListener("click", async () => {
+      if (!isAdmin) return;
+      const privacy = pPrivacy.value.trim();
+      const terms = pTerms.value.trim();
+      setStatus(pStatus, "Saving...", null);
+      try {
+        await update(ref(db, "pages"), { privacy, terms });
+        setStatus(pStatus, "Pages saved.", "success");
+      } catch (e) {
+        setStatus(pStatus, "Error saving pages.", "error");
+      }
+    });
+
+    adminTabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        adminTabs.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const tab = btn.getAttribute("data-admin-tab");
+        adminRecipesSection.style.display = "none";
+        adminArticlesSection.style.display = "none";
+        adminPagesSection.style.display = "none";
+        if (tab === "recipes") adminRecipesSection.style.display = "block";
+        if (tab === "articles") adminArticlesSection.style.display = "block";
+        if (tab === "pages") adminPagesSection.style.display = "block";
       });
-    }
+    });
 
-    async function loadRecipes() {
-      const res = await fetch(`${API_BASE}/public/recipes`);
-      recipes = await res.json();
+    openAdminLockBtn.addEventListener("click", () => {
+      adminLockEl.style.display = adminLockEl.style.display === "block" ? "none" : "block";
+      adminCodeInputEl.value = "";
+      setStatus(adminCodeStatusEl, "", null);
+      if (adminLockEl.style.display === "block") {
+        setTimeout(() => adminCodeInputEl.focus(), 50);
+      }
+    });
+
+    adminCodeBtnEl.addEventListener("click", () => {
+      const value = adminCodeInputEl.value.trim();
+      setStatus(adminCodeStatusEl, "", null);
+      if (!value) {
+        setStatus(adminCodeStatusEl, "Enter the admin code.", "error");
+        return;
+      }
+      if (value !== ADMIN_CODE) {
+        setStatus(adminCodeStatusEl, "Wrong code.", "error");
+        return;
+      }
+      isAdmin = true;
+      adminLockEl.style.display = "none";
+      adminPanelEl.style.display = "block";
+      setStatus(adminCodeStatusEl, "", null);
+      pPrivacy.value = pages.privacy || "";
+      pTerms.value = pages.terms || "";
+    });
+
+    adminLogoutBtn.addEventListener("click", () => {
+      isAdmin = false;
+      adminPanelEl.style.display = "none";
+      adminCodeInputEl.value = "";
+      setStatus(adminCodeStatusEl, "", null);
+      resetRecipeForm();
+      resetArticleForm();
+      setStatus(pStatus, "", null);
+    });
+
+    window.addEventListener("load", () => {
+      adminCodeInputEl.value = "";
+    });
+
+    onValue(ref(db, "recipes"), (snap) => {
+      const val = snap.val() || {};
+      recipes = Object.entries(val).map(([id, v]) => ({ id, ...v }));
+      renderStats();
+      renderRecipesList();
       renderAdminRecipes();
-    }
+      updateMainView();
+    });
 
-    async function loadArticles() {
-      const res = await fetch(`${API_BASE}/public/articles`);
-      articles = await res.json();
+    onValue(ref(db, "articles"), (snap) => {
+      const val = snap.val() || {};
+      articles = Object.entries(val).map(([id, v]) => ({ id, ...v }));
+      renderStats();
+      renderArticlesList();
       renderAdminArticles();
-    }
+      updateMainView();
+    });
+
+    onValue(ref(db, "pages"), (snap) => {
+      const val = snap.val() || {};
+      pages = {
+        privacy: val.privacy || "",
+        terms: val.terms || ""
+      };
+      renderPagesView();
+      if (isAdmin) {
+        pPrivacy.value = pages.privacy || "";
+        pTerms.value = pages.terms || "";
+      }
+      updateMainView();
+    });
+
+    updateMainView();
   </script>
 </body>
 </html>
